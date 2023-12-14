@@ -6,6 +6,9 @@
 #include <QWebEngineSettings>
 #include <QWebEnginePage>
 #include <QWebEngineDownloadRequest>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -20,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     std::string url_chatgpt = "https://chat.openai.com";
     std::string url_duckduckgo = "https://duckduckgo.com" ;
     std::string url_test1 = "https://github.com/neovim/neovim/releases" ;
+    QString darkreader_cdn_jsdeliver = "https://cdn.jsdelivr.net/npm/darkreader@4.9.73/darkreader.min.js";
 
     QUrl url = QUrl(QString::fromStdString(url_chatgpt));
 
@@ -36,11 +40,38 @@ MainWindow::MainWindow(QWidget *parent)
     // page using profile
     QWebEnginePage *page = new QWebEnginePage(profile);
 
-//    QWebEngineProfile::defaultProfile()->setHttpUserAgent(user_agent);
      view->setPage(page);
      view->setUrl(url);
 
     vbox_main->addWidget(view);
+
+    // Inject external JavaScript from a CDN after the page has loaded
+    QObject::connect(page, &QWebEnginePage::loadFinished, [=](bool) {
+        QNetworkAccessManager *networkManager = new QNetworkAccessManager(page);
+
+        // Replace 'https://cdn.example.com/your/script.js' with the actual CDN URL of your script
+        QUrl scriptUrl = QUrl(darkreader_cdn_jsdeliver);
+
+        QNetworkRequest request(scriptUrl);
+
+        QNetworkReply *reply = networkManager->get(request);
+
+        QObject::connect(reply, &QNetworkReply::finished, [=]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                QString scriptContent = QString::fromUtf8(reply->readAll());
+
+                // Run the JavaScript code in the context of the loaded webpage
+                page->runJavaScript(scriptContent);
+                page->runJavaScript("DarkReader.enable();");
+            } else {
+                qDebug() << "Failed to download the script from the CDN. Error: " << reply->errorString();
+            }
+
+            // Clean up
+            reply->deleteLater();
+            networkManager->deleteLater();
+        });
+    });
 
 }
 
