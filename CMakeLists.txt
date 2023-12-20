@@ -59,9 +59,9 @@ install(TARGETS aimerge
 if(UNIX AND NOT APPLE)
     # for Linux, BSD, Solaris, Minix
     if(EXISTS "/.flatpak-info")
-        install(PROGRAMS assets/com.soufrabi.aimerge.desktop  DESTINATION share/applications )
-        install(PROGRAMS assets/com.soufrabi.aimerge.svg  DESTINATION share/icons/hicolor/scalable/apps )
-        # install(FILES assets/com.soufrabi.aimerge.appdata.xml DESTINATION share/metainfo )
+        install(PROGRAMS assets/aimerge.desktop  DESTINATION share/applications )
+        install(PROGRAMS assets/aimerge.svg  DESTINATION share/icons/hicolor/scalable/apps )
+        install(FILES assets/aimerge.appdata.xml DESTINATION share/metainfo )
     else()
     endif()
 

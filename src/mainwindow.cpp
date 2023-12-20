@@ -14,8 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
-    QVBoxLayout *vbox_main = new QVBoxLayout(this);
+    QVBoxLayout *vbox_main = new QVBoxLayout();
     ui->centralwidget->setLayout(vbox_main);
     std::string url_chatgpt = "https://chat.openai.com";
     std::string url_duckduckgo = "https://duckduckgo.com" ;
@@ -32,11 +31,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     profile->settings()->setAttribute(QWebEngineSettings::PluginsEnabled, true);
     profile->settings()->setAttribute(QWebEngineSettings::DnsPrefetchEnabled, true);
+    profile->settings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard, true);
+    profile->settings()->setAttribute(QWebEngineSettings::JavascriptCanPaste,true);
     profile->setHttpUserAgent(user_agent);
     // page using profile
     QWebEnginePage *page = new QWebEnginePage(profile);
 
-//    QWebEngineProfile::defaultProfile()->setHttpUserAgent(user_agent);
      view->setPage(page);
      view->setUrl(url);
 
