@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Chatbot Client
+GenericName=chatbot-client
+Comment=Access multiple AI chatbots
+Exec=chatbot-client
+Terminal=false
+Icon=com.soufrabi.ChatbotClient
+Type=Application
+Keywords=chatbot-client;chatgpt;ai;
+Categories=Qt;KDE
